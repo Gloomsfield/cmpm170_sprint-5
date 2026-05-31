@@ -1,5 +1,9 @@
 // actual gameplay scene
-
+export class Game extends Phaser.Scene {
+	constructor() {
+		super("game_scene");
+	}
+}
 /*
 should:
 -create dinohead, pianomanager, composer
