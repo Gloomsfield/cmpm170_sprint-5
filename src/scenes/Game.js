@@ -13,7 +13,13 @@ export class Game extends Phaser.Scene {
 		for(let i = 0; i < 24; i++) {
 			this.pianoKeys.push(new PianoKey(this, i * 30, 200));
 		}
+
+		this.dinoHead = new DinoHead(this, 500, 200);
 	}
+
+	 update() {
+        this.dinoHead.update(this.input.activePointer);
+    }
 }
 /*
 should:
