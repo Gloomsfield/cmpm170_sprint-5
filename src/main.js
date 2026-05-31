@@ -1,6 +1,7 @@
 import { Initialize } from "@scenes/Initialize.js";
 import { LoadAssets } from "@scenes/LoadAssets.js";
 import { MainMenu } from "@scenes/MainMenu.js";
+import { Game } from "@scenes/Game.js";
 
 'use strict';
 
@@ -13,7 +14,7 @@ const phaserConfig = {
 	height: 700,
 	scale: { autoCenter: Phaser.Scale.CENTER_BOTH, },
 	backgroundColor: "#7db1c7",
-	scene: [ new Initialize(urlQueryParams.get("startScene")), LoadAssets, MainMenu ],
+	scene: [ new Initialize(urlQueryParams.get("startScene")), LoadAssets, MainMenu, Game, ],
 };
 
 export const game = new Phaser.Game(phaserConfig);
