@@ -4,7 +4,21 @@ export class PianoKey extends Phaser.GameObjects.Rectangle {
 		super(scene, x, y, 25, 75, 0xffffea, 1.0);
 
 		scene.add.existing(this);
+
+		this.isHovered = false;
+        this.isPressed = false;
 	}
+
+	 setHovered(hover) {
+        this.isHovered = hover;
+
+    }
+
+    setPressed(press) {
+        this.isPressed = press;
+
+    }
+	
 }
 
 // individual piano key
