@@ -3,7 +3,12 @@ export class MainMenu extends Phaser.Scene {
 		super("mainMenu_scene");
 	}
 
-	create() { }
+	 create() {
+
+        this.cameras.main.setBackgroundColor("#000000");
+        this.add.text(this.scale.width / 2, this.scale.height / 2, "PLAY?", {fontSize: "64px", color: "#ffffff"}).setOrigin(0.5);
+        this.input.once("pointerdown", () => {this.scene.start("game_scene");});
+    }
 }
 
 // starting menu scene

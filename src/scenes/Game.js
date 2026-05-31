@@ -1,4 +1,5 @@
 import { PianoKey } from "@gameobjects/PianoKey.js";
+import { DinoHead } from "@gameobjects/DinoHead.js";
 
 // actual gameplay scene
 export class Game extends Phaser.Scene {
