@@ -19,8 +19,9 @@ export class Game extends Phaser.Scene {
 		this.input.on("pointermove", this.dinoHead.handlePointerMoved, this.dinoHead);
 	}
 
-	 update() {
+	 update(_, delta) {
 		this.pianoManager.update(this.dinoHead);
+		this.dinoHead.update(delta);
 	}
 }
 /*
