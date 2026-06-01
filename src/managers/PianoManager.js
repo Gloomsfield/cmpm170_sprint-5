@@ -8,90 +8,107 @@ export class PianoManager {
 
         this.keys = [];
 
-        this.hoveredKey = null;
-        this.pressedKey = null;
+		this.hoveredKeyIndex = Math.floor(PianoConfig.keyCount / 2.0);
+		this.pressedKeyIndex = -1;
 
         this.createKeys();
+
+		this.startTime = scene.time.now;
+		this.noteHistory = [];
+
+		scene.add.existing(this);
     }
     
-
     createKeys() {
-
-        for(let i = 0; i < PianoConfig.keyCount; i++) {
+        for(let i = PianoConfig.keyCount - 1; i >= 0; i--) {
             const spacing = (PianoConfig.pianoWidth * PianoConfig.pianoScale) / (PianoConfig.keyCount - 1);
 
             const x = PianoConfig.pianoX + i * spacing;
-            const y = this.PianoCollision(x);
+			const y = PianoConfig.pianoY - x * Math.atan(Math.PI / 6.0);
 
-            const key = new PianoKey(this.scene, x, y, PianoConfig.pianoScale);
+            const key = new PianoKey(this.scene, x, y, PianoConfig.pianoScale, i);
             
             key.setDepth(y);
+
+			key.on("note-pressed", this.playNote, this);
+			key.on("note-released", (noteIndex) => {});
 
             this.keys.push(key);
         }
     }
 
+	playNote(noteData) {
+		this.noteHistory.push({
+			noteData: noteData,
+			noteTiming: this.scene.time.now - this.startTime,
+		});
 
-    update(dinoX, dinoY) {
-        let newHoveredKey = null;
+		noteData.noteSound.play();
+	}
 
-        for(const key of this.keys) {
+    update(dinoInstance) {
+		let newHoveredIndex = this.hoveredKeyIndex;
 
-            const halfW = key.displayWidth / 2;
+		if(Math.abs(dinoInstance.offsetFromKeyX) > this.keys[this.hoveredKeyIndex].isoWidth / 2.0) {
+			const direction = -Math.sign(dinoInstance.offsetFromKeyX);
 
-            if(dinoX >= key.x - halfW && dinoX <= key.x + halfW) {
-                newHoveredKey = key;
-                break;
-            }
-        }
+			newHoveredIndex = this.hoveredKeyIndex + direction;
 
-        if(newHoveredKey !== this.hoveredKey) {
+			if(0 <= newHoveredIndex && newHoveredIndex < PianoConfig.keyCount) {
+				dinoInstance.snapToKey({
+					isoX: this.keys[newHoveredIndex].isoX,
+					isoY: this.keys[newHoveredIndex].isoY
+				});
+            	
+				this.keys[this.hoveredKeyIndex].setHovered(false);
+				this.keys[newHoveredIndex].setHovered(true);
+            	
+				this.hoveredKeyIndex = newHoveredIndex;
+            	
+				if(this.pressedKeyIndex !== -1) {
+					this.keys[this.pressedKeyIndex].setPressed(false);
+            	
+					this.pressedKeyIndex += direction;
+            	
+					if(this.pressedKeyIndex < 0 || PianoConfig.keyCount <= this.pressedKeyIndex) {
+						this.pressedKeyIndex = -1;
+            	
+						return;
+					}
+            	
+					this.keys[this.pressedKeyIndex].setPressed(true);
+				}
+			}
+		}
 
-            if(this.hoveredKey) {
-                this.hoveredKey.setHovered(false);
-            }
+		if(this.pressedKeyIndex !== -1) {
+			if(dinoInstance.y <= this.keys[this.pressedKeyIndex].pressedThreshold) {
+				this.keys[this.pressedKeyIndex].setPressed(false);
+				
+				this.pressedKeyIndex = -1;
+			}
 
-            this.hoveredKey = newHoveredKey;
+			return;
+		}
 
-            if(this.hoveredKey) {
-                this.hoveredKey.setHovered(true);
-            }
-        }
+		if(dinoInstance.y <= this.keys[this.hoveredKeyIndex].pressedThreshold) { return; }
 
-        let newPressedKey = null;
-
-        if(this.hoveredKey) {
-
-            const surfaceY = this.PianoCollision(dinoX);
-
-            if (surfaceY - dinoY <= PianoConfig.pressThreshold * PianoConfig.pianoScale) {
-                newPressedKey = this.hoveredKey;
-            }
-        }
-
-        if(newPressedKey !== this.pressedKey) {
-
-            if(this.pressedKey) {
-                this.pressedKey.setPressed(false);
-            }
-
-            this.pressedKey = newPressedKey;
-
-            if(this.pressedKey) {
-                this.pressedKey.setPressed(true);
-            }
-        }
+		this.pressedKeyIndex = this.hoveredKeyIndex;
+		this.keys[this.pressedKeyIndex].setPressed(true);
     }
 
 
-    PianoCollision(x) {
+    getClampedRange(x) {
+		const yLowKeyDown = PianoConfig.pianoY + (PianoConfig.keyHeight / 2);
+		const yDinoMax = PianoConfig.pianoY - (PianoConfig.dinoUpperYOffset);
 
-        const leftX = PianoConfig.pianoX;
-        const rightX = PianoConfig.pianoX + PianoConfig.pianoWidth * PianoConfig.pianoScale;
+		const lowerBound = yLowKeyDown - (x * Math.atan(Math.PI / 6.0));
+		const upperBound = yDinoMax - (x * Math.atan(Math.PI / 6.0));
 
-        const t = Phaser.Math.Clamp((x - leftX) / (rightX - leftX), 0, 1);
-
-        return Phaser.Math.Linear(PianoConfig.pianoY, PianoConfig.pianoY + PianoConfig.pianoHeight * PianoConfig.pianoScale, t);
+		return {
+			lowerBound,
+			upperBound
+		};
     }
 }
 

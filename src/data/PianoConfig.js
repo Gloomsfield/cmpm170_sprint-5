@@ -9,6 +9,8 @@ export const PianoConfig = {
     pianoX: 100,
     pianoY: 470,
 
+	dinoUpperYOffset: 100,
+
     pianoWidth: 905,
     pianoHeight: -140,
 
