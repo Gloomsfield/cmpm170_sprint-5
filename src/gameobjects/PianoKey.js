@@ -1,12 +1,16 @@
 // TODO - extend a different type depending on how we want to do the art
 export class PianoKey extends Phaser.GameObjects.Rectangle {
-	constructor(scene, x, y) {
+	constructor(scene, x, y, noteIndex) {
 		super(scene, x, y, 25, 75, 0xffffea, 1.0);
 
 		scene.add.existing(this);
 
 		this.isHovered = false;
         this.isPressed = false;
+
+		this.noteData = {
+			noteSound: scene.sound.add("a440hz-c4_audio").setDetune((noteIndex - 12) * 100.0),
+		};
 	}
 
 	 setHovered(hover) {
