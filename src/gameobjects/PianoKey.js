@@ -1,27 +1,41 @@
 // TODO - extend a different type depending on how we want to do the art
+// individual piano key
 export class PianoKey extends Phaser.GameObjects.Rectangle {
-	constructor(scene, x, y) {
-		super(scene, x, y, 25, 75, 0xffffea, 1.0);
 
-		scene.add.existing(this);
+    constructor(scene, x, y) {
+        super(scene, x, y, 30, 120, 0xffffff);
 
-		this.isHovered = false;
+        scene.add.existing(this);
+
+        this.isHovered = false;
         this.isPressed = false;
-	}
+    }
 
-	 setHovered(hover) {
+    setHovered(hover) {
         this.isHovered = hover;
 
+        this.updateVisuals();
     }
 
-    setPressed(press) {
-        this.isPressed = press;
+    setPressed(pressed) {
+        this.isPressed = pressed;
 
+        this.updateVisuals();
     }
-	
+
+    updateVisuals() {
+
+        if(this.isPressed) {
+            this.setFillStyle(0xff0000);
+
+        } else if(this.isHovered) {
+            this.setFillStyle(0xffd700);
+
+        } else {
+            this.setFillStyle(0xffffff);
+        }
+    }
 }
-
-// individual piano key
 
 /*
 should:
