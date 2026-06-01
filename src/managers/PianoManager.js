@@ -24,7 +24,7 @@ export class PianoManager {
             const spacing = (PianoConfig.pianoWidth * PianoConfig.pianoScale) / (PianoConfig.keyCount - 1);
 
             const x = PianoConfig.pianoX + i * spacing;
-            const y = this.PianoCollision(x);
+			const y = PianoConfig.pianoY - x * Math.atan(Math.PI / 6.0);
 
             const key = new PianoKey(this.scene, x, y, PianoConfig.pianoScale, i);
             
@@ -75,10 +75,9 @@ export class PianoManager {
         let newPressedKey = null;
 
         if(this.hoveredKey) {
+			const clampedRange = this.getClampedRange(dinoX);
 
-            const surfaceY = this.PianoCollision(dinoX);
-
-            if (surfaceY - dinoY <= PianoConfig.pressThreshold * PianoConfig.pianoScale) {
+            if (dinoY > clampedRange.lowerBound - PianoConfig.pressThreshold) {
                 newPressedKey = this.hoveredKey;
             }
         }
@@ -98,14 +97,17 @@ export class PianoManager {
     }
 
 
-    PianoCollision(x) {
+    getClampedRange(x) {
+		const yLowKeyDown = PianoConfig.pianoY + (PianoConfig.keyHeight / 2);
+		const yDinoMax = PianoConfig.pianoY - (PianoConfig.dinoUpperYOffset);
 
-        const leftX = PianoConfig.pianoX;
-        const rightX = PianoConfig.pianoX + PianoConfig.pianoWidth * PianoConfig.pianoScale;
+		const lowerBound = yLowKeyDown - (x * Math.atan(Math.PI / 6.0));
+		const upperBound = yDinoMax - (x * Math.atan(Math.PI / 6.0));
 
-        const t = Phaser.Math.Clamp((x - leftX) / (rightX - leftX), 0, 1);
-
-        return Phaser.Math.Linear(PianoConfig.pianoY, PianoConfig.pianoY + PianoConfig.pianoHeight * PianoConfig.pianoScale, t);
+		return {
+			lowerBound,
+			upperBound
+		};
     }
 }
 
