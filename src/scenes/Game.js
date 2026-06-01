@@ -8,15 +8,19 @@ export class Game extends Phaser.Scene {
 	}
 
 	create() {
+        this.input.on("pointerdown", () => {
+			this.input.mouse.requestPointerLock();
+		});
+
 		this.pianoManager = new PianoManager(this);
 
 		this.dinoHead = new DinoHead(this, 500, 200, this.pianoManager);
+
+		this.input.on("pointermove", this.dinoHead.handlePointerMoved, this.dinoHead);
 	}
 
 	 update() {
-		this.dinoHead.update(this.input.activePointer);
-
-		this.pianoManager.update(this.dinoHead.x,this.dinoHead.y);
+		this.pianoManager.update(this.dinoHead);
 	}
 }
 /*

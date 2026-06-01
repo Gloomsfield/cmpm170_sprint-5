@@ -4,17 +4,35 @@ export class DinoHead extends Phaser.GameObjects.Arc {
         super(scene, x, y, 20, 0, 360, false, 0x00ff00);
         
         scene.add.existing(this);
+
         this.setDepth(1000);
         this.pianoManager = pianoManager;
+
+		this.offsetFromKeyX = 0.0;
+		this.offsetFromKeyY = 0.0;
     }
 
-    update(pointer) {
+	linearizeIsometricX(x) {
+		return x * Math.atan(Math.PI / 6.0);
+	}
 
-        this.x = Phaser.Math.Clamp(pointer.x, 0, this.scene.scale.width);
+	snapToKey(keyData) {
+		this.x = this.linearizeIsometricX(keyData.isoX);
+		this.y = keyData.isoY + this.offsetFromKeyY;
 
-		const clampedRange = this.pianoManager.getClampedRange(this.x);
+		this.offsetFromKeyX = 0.0;
+	}
 
-        this.y = Phaser.Math.Clamp(pointer.y, clampedRange.upperBound, clampedRange.lowerBound);
+	isometrizeLinearDeltaX(x) {
+		return x / Math.atan(Math.PI / 6.0);
+	}
+
+    handlePointerMoved(pointer) {
+		const deltaX = this.isometrizeLinearDeltaX(pointer.movementX);
+		this.offsetFromKeyX += deltaX;
+
+		this.offsetFromKeyY += pointer.movementY;
+		this.y += pointer.movementY;
     }
 }
 

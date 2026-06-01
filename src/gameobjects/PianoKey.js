@@ -1,15 +1,23 @@
 // individual piano key
 import { PianoConfig } from "@data/PianoConfig.js";
 
-export class PianoKey extends Phaser.GameObjects.Rectangle {
+export class PianoKey extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y, scale, noteIndex) {
-		super(scene, x, y + (PianoConfig.keyHeight * scale) / 2, PianoConfig.keyWidth, PianoConfig.keyHeight, 0xffffff);
+		super(scene, x, y, "piano-key_image");
 
-		this.setScale(scale);
+		this.texture.setFilter(Phaser.Textures.FilterMode.Nearest);
+
+		this.setScale(scale * 6.5);
         scene.add.existing(this);
 
         this.isHovered = false;
         this.isPressed = false;
+
+		this.isoWidth = 40.0;
+		this.isoX = x / Math.atan(Math.PI / 6.0) + 75.0;
+		this.isoY = y;
+
+		this.pressedThreshold = this.isoY + 10.0;
 
 		this.noteData = {
 			noteIndex: noteIndex,
@@ -43,13 +51,13 @@ export class PianoKey extends Phaser.GameObjects.Rectangle {
 
     updateVisuals() {
         if(this.isPressed) {
-            this.setFillStyle(0xff0000);
+            this.setTint(0xff0000);
 
         } else if(this.isHovered) {
-            this.setFillStyle(0xffd700);
+            this.setTint(0xffd700);
 
         } else {
-            this.setFillStyle(0xffffff);
+            this.setTint(0xffffff);
         }
     }
 }

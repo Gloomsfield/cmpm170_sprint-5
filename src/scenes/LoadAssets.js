@@ -5,6 +5,8 @@ export class LoadAssets extends Phaser.Scene {
 
 	preload() {
 		this.load.audio("a440hz-c4_audio", "./assets/piano-samples/a440hz-c4.mp3");
+
+		this.load.image("piano-key_image", "./assets/piano-art/piano-key.png");
 	}
 }
 
