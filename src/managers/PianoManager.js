@@ -1,5 +1,29 @@
 // manages piano behavior
 
+export class PianoManager extends Phaser.GameObjects.GameObject {
+	constructor(scene, x, y) {
+		super(scene, x, y);
+
+		scene.add.existing(this);
+
+		this.startTime = scene.time.now;
+		this.noteHistory = [];
+
+		this.activeNotes = new Array(24);
+
+		this.scene = scene;
+	}
+
+	playNote(noteData) {
+		this.noteHistory.push({
+			noteData: noteData,
+			noteTiming: this.scene.time.now - this.startTime,
+		});
+
+		noteData.noteSound.play();
+	}
+}
+
 /*
 should:
 -create piano keys
