@@ -10,14 +10,14 @@ export class Game extends Phaser.Scene {
 	create() {
 		this.pianoManager = new PianoManager(this);
 
-		this.dinoHead = new DinoHead(this, 500, 200);
+		this.dinoHead = new DinoHead(this, 500, 200, this.pianoManager);
 	}
 
 	 update() {
-		this.pianoManager.update(this.dinoHead.x,this.dinoHead.y);
+		this.dinoHead.update(this.input.activePointer);
 
-        this.dinoHead.update(this.input.activePointer);
-    }
+		this.pianoManager.update(this.dinoHead.x,this.dinoHead.y);
+	}
 }
 /*
 should:

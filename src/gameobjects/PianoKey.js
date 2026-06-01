@@ -1,10 +1,12 @@
-// TODO - extend a different type depending on how we want to do the art
 // individual piano key
+import { PianoConfig } from "@data/PianoConfig.js";
+
 export class PianoKey extends Phaser.GameObjects.Rectangle {
 
-    constructor(scene, x, y) {
-        super(scene, x, y, 30, 120, 0xffffff);
+    constructor(scene, x, y, scale) {
+		super(scene, x, y + (PianoConfig.keyHeight * scale) / 2, PianoConfig.keyWidth, PianoConfig.keyHeight, 0xffffff);
 
+		this.setScale(scale);
         scene.add.existing(this);
 
         this.isHovered = false;
