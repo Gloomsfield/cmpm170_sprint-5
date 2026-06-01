@@ -12,11 +12,14 @@ export class PianoManager {
         this.pressedKey = null;
 
         this.createKeys();
+
+		this.startTime = scene.time.now;
+		this.noteHistory = [];
+
+		scene.add.existing(this);
     }
     
-
     createKeys() {
-
         for(let i = 0; i < PianoConfig.keyCount; i++) {
             const spacing = (PianoConfig.pianoWidth * PianoConfig.pianoScale) / (PianoConfig.keyCount - 1);
 
@@ -27,10 +30,21 @@ export class PianoManager {
             
             key.setDepth(y);
 
+			key.on("note-pressed", (noteData) => {});
+			key.on("note-released", (noteIndex) => {});
+
             this.keys.push(key);
         }
     }
 
+	playNote(noteData) {
+		this.noteHistory.push({
+			noteData: noteData,
+			noteTiming: this.scene.time.now - this.startTime,
+		});
+
+		noteData.noteSound.play();
+	}
 
     update(dinoX, dinoY) {
         let newHoveredKey = null;
@@ -93,30 +107,6 @@ export class PianoManager {
 
         return Phaser.Math.Linear(PianoConfig.pianoY, PianoConfig.pianoY + PianoConfig.pianoHeight * PianoConfig.pianoScale, t);
     }
-}
-
-export class PianoManager extends Phaser.GameObjects.GameObject {
-	constructor(scene, x, y) {
-		super(scene, x, y);
-
-		scene.add.existing(this);
-
-		this.startTime = scene.time.now;
-		this.noteHistory = [];
-
-		this.activeNotes = new Array(24);
-
-		this.scene = scene;
-	}
-
-	playNote(noteData) {
-		this.noteHistory.push({
-			noteData: noteData,
-			noteTiming: this.scene.time.now - this.startTime,
-		});
-
-		noteData.noteSound.play();
-	}
 }
 
 /*
