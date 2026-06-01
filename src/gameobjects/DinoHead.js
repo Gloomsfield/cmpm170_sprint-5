@@ -12,7 +12,7 @@ export class DinoHead extends Phaser.GameObjects.Arc {
 
         this.x = Phaser.Math.Clamp(pointer.x, 0, this.scene.scale.width);
 
-        const surfaceY = this.pianoManager.getKeyboardSurfaceY(this.x);
+        const surfaceY = this.pianoManager.PianoCollision(this.x);
 
         this.y = Phaser.Math.Clamp(pointer.y, 0, surfaceY);
     }
