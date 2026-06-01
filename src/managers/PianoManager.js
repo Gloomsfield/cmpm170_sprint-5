@@ -23,7 +23,7 @@ export class PianoManager {
             const x = PianoConfig.pianoX + i * spacing;
             const y = this.PianoCollision(x);
 
-            const key = new PianoKey(this.scene, x, y, PianoConfig.pianoScale);
+            const key = new PianoKey(this.scene, x, y, PianoConfig.pianoScale, i);
             
             key.setDepth(y);
 
