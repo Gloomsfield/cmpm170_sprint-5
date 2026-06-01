@@ -32,7 +32,7 @@ export class PianoKey extends Phaser.GameObjects.Rectangle {
         this.isPressed = press;
 	
 		if(press === true) {
-			let noteDataClone = JSON.parse(JSON.stringify(this.noteData));
+			let noteDataClone = { ...this.noteData };
 			this.emit("note-pressed", noteDataClone);
 		} else {
 			this.emit("note-released", this.noteData.noteIndex);
