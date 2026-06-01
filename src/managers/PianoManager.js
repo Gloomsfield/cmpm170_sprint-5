@@ -30,7 +30,7 @@ export class PianoManager {
             
             key.setDepth(y);
 
-			key.on("note-pressed", (noteData) => {});
+			key.on("note-pressed", this.playNote, this);
 			key.on("note-released", (noteIndex) => {});
 
             this.keys.push(key);
