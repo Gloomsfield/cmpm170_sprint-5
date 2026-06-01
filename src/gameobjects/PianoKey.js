@@ -1,11 +1,14 @@
-// TODO - extend a different type depending on how we want to do the art
+// individual piano key
+import { PianoConfig } from "@data/PianoConfig.js";
+
 export class PianoKey extends Phaser.GameObjects.Rectangle {
-	constructor(scene, x, y, noteIndex) {
-		super(scene, x, y, 25, 75, 0xffffea, 1.0);
+    constructor(scene, x, y, scale, noteIndex) {
+		super(scene, x, y + (PianoConfig.keyHeight * scale) / 2, PianoConfig.keyWidth, PianoConfig.keyHeight, 0xffffff);
 
-		scene.add.existing(this);
+		this.setScale(scale);
+        scene.add.existing(this);
 
-		this.isHovered = false;
+        this.isHovered = false;
         this.isPressed = false;
 
 		this.noteData = {
@@ -15,11 +18,14 @@ export class PianoKey extends Phaser.GameObjects.Rectangle {
 			// TODO - handle velocity
 			velocity: undefined,
 		};
+
+		this.scene = scene;
 	}
 
-	 setHovered(hover) {
+    setHovered(hover) {
         this.isHovered = hover;
 
+        this.updateVisuals();
     }
 
     setPressed(press) {
@@ -31,10 +37,22 @@ export class PianoKey extends Phaser.GameObjects.Rectangle {
 		} else {
 			this.emit("note-released", this.noteData.noteIndex);
 		}
+
+        this.updateVisuals();
+    }
+
+    updateVisuals() {
+        if(this.isPressed) {
+            this.setFillStyle(0xff0000);
+
+        } else if(this.isHovered) {
+            this.setFillStyle(0xffd700);
+
+        } else {
+            this.setFillStyle(0xffffff);
+        }
     }
 }
-
-// individual piano key
 
 /*
 should:

@@ -1,4 +1,4 @@
-import { PianoKey } from "@gameobjects/PianoKey.js";
+import { PianoManager } from "@managers/PianoManager.js";
 import { DinoHead } from "@gameobjects/DinoHead.js";
 
 // actual gameplay scene
@@ -8,18 +8,16 @@ export class Game extends Phaser.Scene {
 	}
 
 	create() {
-		this.pianoKeys = [];
+		this.pianoManager = new PianoManager(this);
 
-		for(let i = 0; i < 24; i++) {
-			this.pianoKeys.push(new PianoKey(this, i * 30, 200));
-		}
-
-		this.dinoHead = new DinoHead(this, 500, 200);
+		this.dinoHead = new DinoHead(this, 500, 200, this.pianoManager);
 	}
 
 	 update() {
-        this.dinoHead.update(this.input.activePointer);
-    }
+		this.dinoHead.update(this.input.activePointer);
+
+		this.pianoManager.update(this.dinoHead.x,this.dinoHead.y);
+	}
 }
 /*
 should:
