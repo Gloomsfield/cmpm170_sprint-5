@@ -9,7 +9,11 @@ export class PianoKey extends Phaser.GameObjects.Rectangle {
         this.isPressed = false;
 
 		this.noteData = {
+			noteIndex: noteIndex,
 			noteSound: scene.sound.add("a440hz-c4_audio").setDetune((noteIndex - 12) * 100.0),
+
+			// TODO - handle velocity
+			velocity: undefined,
 		};
 	}
 
@@ -20,9 +24,14 @@ export class PianoKey extends Phaser.GameObjects.Rectangle {
 
     setPressed(press) {
         this.isPressed = press;
-
-    }
 	
+		if(press === true) {
+			let noteDataClone = JSON.parse(JSON.stringify(this.noteData));
+			this.emit("note-pressed", noteDataClone);
+		} else {
+			this.emit("note-released", this.noteData.noteIndex);
+		}
+    }
 }
 
 // individual piano key
