@@ -88,6 +88,8 @@ export class PianoManager {
 				
 				this.pressedKeyIndex = -1;
 			}
+
+			return;
 		}
 
 		if(dinoInstance.y < this.keys[this.hoveredKeyIndex].pressedThreshold) { return; }
