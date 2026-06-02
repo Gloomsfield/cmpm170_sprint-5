@@ -31,7 +31,6 @@ export class DinoHead extends Phaser.GameObjects.Arc {
 	snapToKey(keyData) {
 		this.target.x = this.linearizeIsometricX(keyData.isoX);
 		this.target.y = keyData.isoY + 10 + this.offsetFromKeyY;
-		console.log(this.offsetFromKeyY);
 
 		this.clampedRange = this.pianoManager.getClampedRange(this.target.x);
 
