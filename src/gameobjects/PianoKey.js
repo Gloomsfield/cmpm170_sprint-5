@@ -5,6 +5,8 @@ export class PianoKey extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y, scale, noteIndex) {
 		super(scene, x, y, "piano-key_image");
 
+		this.setDepth(101 + PianoConfig.keyCount - noteIndex * 2);
+
 		this.texture.setFilter(Phaser.Textures.FilterMode.Nearest);
 
 		this.setScale(scale * 6.5);
@@ -13,11 +15,11 @@ export class PianoKey extends Phaser.GameObjects.Sprite {
         this.isHovered = false;
         this.isPressed = false;
 
-		this.isoWidth = 40.0;
+		this.isoWidth = 30.0;
 		this.isoX = x / Math.atan(Math.PI / 6.0) + 75.0;
 		this.isoY = y;
 
-		this.pressedThreshold = this.isoY + 10.0;
+		this.pressedThreshold = this.isoY - 10.0;
 
 		this.noteData = {
 			noteIndex: noteIndex,

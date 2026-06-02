@@ -28,8 +28,6 @@ export class PianoManager {
 
             const key = new PianoKey(this.scene, x, y, PianoConfig.pianoScale, i);
             
-            key.setDepth(y);
-
 			key.on("note-pressed", this.playNote, this);
 			key.on("note-released", (noteIndex) => {});
 
@@ -57,8 +55,11 @@ export class PianoManager {
 			if(0 <= newHoveredIndex && newHoveredIndex < PianoConfig.keyCount) {
 				dinoInstance.snapToKey({
 					isoX: this.keys[newHoveredIndex].isoX,
-					isoY: this.keys[newHoveredIndex].isoY
+					isoY: this.keys[newHoveredIndex].isoY,
+					keyIndex: newHoveredIndex,
 				});
+
+				dinoInstance.updateHover(newHoveredIndex);
             	
 				this.keys[this.hoveredKeyIndex].setHovered(false);
 				this.keys[newHoveredIndex].setHovered(true);
@@ -72,7 +73,7 @@ export class PianoManager {
             	
 					if(this.pressedKeyIndex < 0 || PianoConfig.keyCount <= this.pressedKeyIndex) {
 						this.pressedKeyIndex = -1;
-            	
+
 						return;
 					}
             	
@@ -87,11 +88,9 @@ export class PianoManager {
 				
 				this.pressedKeyIndex = -1;
 			}
-
-			return;
 		}
 
-		if(dinoInstance.y <= this.keys[this.hoveredKeyIndex].pressedThreshold) { return; }
+		if(dinoInstance.y < this.keys[this.hoveredKeyIndex].pressedThreshold) { return; }
 
 		this.pressedKeyIndex = this.hoveredKeyIndex;
 		this.keys[this.pressedKeyIndex].setPressed(true);

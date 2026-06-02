@@ -1,4 +1,6 @@
 // dino head controlled by mouse
+import { PianoConfig } from "@data/PianoConfig.js";
+
 export class DinoHead extends Phaser.GameObjects.Arc {
     constructor(scene, x, y, pianoManager) {
         super(scene, x, y, 20, 0, 360, false, 0x00ff00);
@@ -18,6 +20,8 @@ export class DinoHead extends Phaser.GameObjects.Arc {
 
 		this.offsetFromKeyX = 0.0;
 		this.offsetFromKeyY = 0.0;
+
+		this.clampedRange = pianoManager.getClampedRange(0);
     }
 
 	linearizeIsometricX(x) {
@@ -26,7 +30,16 @@ export class DinoHead extends Phaser.GameObjects.Arc {
 
 	snapToKey(keyData) {
 		this.target.x = this.linearizeIsometricX(keyData.isoX);
-		this.target.y = keyData.isoY + this.offsetFromKeyY;
+		this.target.y = keyData.isoY + 10 + this.offsetFromKeyY;
+		console.log(this.offsetFromKeyY);
+
+		this.clampedRange = this.pianoManager.getClampedRange(this.target.x);
+
+		this.target.y = Phaser.Math.Clamp(
+			this.target.y,
+			this.clampedRange.upperBound,
+			this.clampedRange.lowerBound
+		);
 
 		this.offsetFromKeyX = 0.0;
 	}
@@ -39,9 +52,22 @@ export class DinoHead extends Phaser.GameObjects.Arc {
 		const deltaX = this.isometrizeLinearDeltaX(pointer.movementX);
 		this.offsetFromKeyX += deltaX;
 
-		this.offsetFromKeyY += pointer.movementY;
-		this.target.y += pointer.movementY;
+		this.offsetFromKeyY = Phaser.Math.Clamp(
+			this.offsetFromKeyY + pointer.movementY,
+			this.clampedRange.upperBound - this.clampedRange.lowerBound,
+			0.0
+		);
+
+		this.target.y = Phaser.Math.Clamp(
+			this.target.y + pointer.movementY,
+			this.clampedRange.upperBound,
+			this.clampedRange.lowerBound
+		);
     }
+
+	updateHover(hoverIndex) {
+		this.setDepth(104 - PianoConfig.keyCount + hoverIndex * 2);
+	}
 
 	update(delta) {
 		const positionDelta = {
