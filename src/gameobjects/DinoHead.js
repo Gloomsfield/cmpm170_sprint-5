@@ -14,14 +14,14 @@ export class DinoHead extends Phaser.GameObjects.Arc {
 		this.maxSpeed = 2000.0;
 
 		this.target = {
-			x: 0.0,
-			y: 0.0,
+			x: 1080.0 / 2.0,
+			y: 650.0 / 2.0 - 300.0,
 		};
 
 		this.offsetFromKeyX = 0.0;
 		this.offsetFromKeyY = 0.0;
 
-		this.clampedRange = pianoManager.getClampedRange(0);
+		this.clampedRange = pianoManager.getClampedRange(this.target.x);
     }
 
 	linearizeIsometricX(x) {
