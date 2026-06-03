@@ -17,6 +17,9 @@ export class Game extends Phaser.Scene {
 		this.dinoHead = new DinoHead(this, 500, 200, this.pianoManager);
 
 		this.input.on("pointermove", this.dinoHead.handlePointerMoved, this.dinoHead);
+
+		this.gameLength = 20000;
+		this.time.delayedCall(this.gameLength, () => {this.endGame();});
 	}
 
 	 update(_, delta) {
