@@ -30,7 +30,8 @@ export class Game extends Phaser.Scene {
 	endGame() {
 		this.scene.start("end",
 			{
-				songData: this.pianoManager.noteHistory
+				songData: this.pianoManager.noteHistory,
+    			songLength: this.time.now - this.pianoManager.startTime
 			}
 		);
 	}

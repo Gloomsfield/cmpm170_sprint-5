@@ -5,7 +5,14 @@ export class Composer {
     }
 
     playSong(songData) {
+        for(const note of songData) {
 
+            this.scene.time.delayedCall(note.noteTiming, () => {
+                const sound = this.scene.sound.add("a440hz-c4_audio").setDetune((note.noteIndex - 12) * 100);
+                sound.play();
+                }
+            );
+        }
     }
 }
 
