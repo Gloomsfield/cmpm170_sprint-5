@@ -26,6 +26,14 @@ export class Game extends Phaser.Scene {
 		this.pianoManager.update(this.dinoHead);
 		this.dinoHead.update(delta);
 	}
+
+	endGame() {
+		this.scene.start("end_scene",
+			{
+				songData: this.pianoManager.noteHistory
+			}
+		);
+	}
 }
 /*
 should:
