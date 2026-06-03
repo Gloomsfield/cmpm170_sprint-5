@@ -17,6 +17,7 @@ export class End extends Phaser.Scene {
         this.composer = new Composer(this);
         this.composer.playSong(this.songData);
     }
+    
 }
 
 /*

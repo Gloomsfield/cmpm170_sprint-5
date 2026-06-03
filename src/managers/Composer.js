@@ -2,13 +2,24 @@
 export class Composer {
     constructor(scene) {
         this.scene = scene;
+
+        this.noteSounds = [];
+
+        for(let i = 0; i < 24; i++) {
+
+            const sound = scene.sound.add("a440hz-c4_audio").setDetune((i - 12) * 100);
+            this.noteSounds.push(sound);
+        }
     }
 
     playSong(songData) {
+
         for(const note of songData) {
 
             this.scene.time.delayedCall(note.noteTiming, () => {
-                const sound = this.scene.sound.add("a440hz-c4_audio").setDetune((note.noteIndex - 12) * 100);
+                
+                const sound = this.noteSounds[note.noteIndex];
+                sound.stop();
                 sound.play();
                 }
             );
