@@ -1,13 +1,22 @@
 // dino head controlled by mouse
 import { PianoConfig } from "@data/PianoConfig.js";
 
-export class DinoHead extends Phaser.GameObjects.Arc {
+export class DinoHead extends Phaser.GameObjects.Container {
     constructor(scene, x, y, pianoManager) {
-        super(scene, x, y, 20, 0, 360, false, 0x00ff00);
-        
+        super(scene, x, y);
+
         scene.add.existing(this);
 
         this.setDepth(1000);
+        this.sprite = scene.add.sprite(100, 150, "dino-head");
+        this.sprite.setScale(2);
+        this.sprite.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+        this.hitbox = scene.add.circle(0, 0, 20, 0x00ff00);
+		this.hitbox.setAlpha(0);
+
+		this.add(this.hitbox);
+		this.add(this.sprite);
+
         this.pianoManager = pianoManager;
 
 		this.minSpeed = 1000.0;
@@ -65,7 +74,8 @@ export class DinoHead extends Phaser.GameObjects.Arc {
     }
 
 	updateHover(hoverIndex) {
-		this.setDepth(104 - PianoConfig.keyCount + hoverIndex * 2);
+		const depth = 104 - PianoConfig.keyCount + hoverIndex * 2;
+		this.setDepth(depth);
 	}
 
 	update(delta) {
