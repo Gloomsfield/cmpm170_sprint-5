@@ -1,4 +1,9 @@
 // ending scene after meteor
+export class EndScene extends Phaser.Scene {
+    constructor() {
+        super("end_scene");
+    }
+}
 
 /*
 should:
