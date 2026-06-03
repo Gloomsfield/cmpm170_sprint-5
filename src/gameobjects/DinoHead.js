@@ -8,8 +8,8 @@ export class DinoHead extends Phaser.GameObjects.Container {
         scene.add.existing(this);
 
         this.setDepth(1000);
-        this.sprite = scene.add.sprite(280, 495, "dino-head");
-        this.sprite.setScale(2);
+        this.sprite = scene.add.sprite(350, 620, "dino-head");
+        this.sprite.setScale(2.5);
         this.sprite.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
         this.hitbox = scene.add.circle(0, 0, 20, 0x00ff00);
 		this.hitbox.setAlpha(0);
