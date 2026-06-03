@@ -1,7 +1,16 @@
 // ending scene after meteor
-export class EndScene extends Phaser.Scene {
+export class End extends Phaser.Scene {
     constructor() {
-        super("end_scene");
+        super("end");
+    }
+
+    init(data) {
+        this.songData = data.songData;
+    }
+
+    create() {
+        this.cameras.main.setBackgroundColor("#ffffff");
+        this.add.text(this.scale.width / 2, 200, "Your Last Sonnet", {color: "#000000", fontSize: "48px"}).setOrigin(0.5);
     }
 }
 
