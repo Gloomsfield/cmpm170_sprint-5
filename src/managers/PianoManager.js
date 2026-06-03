@@ -37,7 +37,7 @@ export class PianoManager {
 
 	playNote(noteData) {
 		this.noteHistory.push({
-			noteData: noteData,
+			noteIndex: noteData.noteIndex,
 			noteTiming: this.scene.time.now - this.startTime,
 		});
 

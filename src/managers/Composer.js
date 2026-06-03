@@ -1,4 +1,13 @@
 // records and replays piano song 
+export class Composer {
+    constructor(scene) {
+        this.scene = scene;
+    }
+
+    playSong(songData) {
+
+    }
+}
 
 /*
 should:
