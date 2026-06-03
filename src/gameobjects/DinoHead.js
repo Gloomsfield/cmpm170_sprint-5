@@ -73,6 +73,11 @@ export class DinoHead extends Phaser.GameObjects.Container {
 		);
     }
 
+	changeToSadDino() {
+		this.sprite.setTexture("dino-head2");
+		this.sprite.texture.setFilter(Phaser.Textures.FilterMode.NEAREST);
+	}
+
 	updateHover(hoverIndex) {
 		const depth = 104 - PianoConfig.keyCount + hoverIndex * 2;
 		this.setDepth(depth);

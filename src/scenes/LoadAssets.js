@@ -8,6 +8,7 @@ export class LoadAssets extends Phaser.Scene {
 
 		this.load.image("piano-key_image", "./assets/piano-art/piano-key.png");
 		this.load.image("dino-head", "./assets/dino-art/dino.png");
+		this.load.image("dino-head2", "./assets/dino-art/dino2.png");
 	}
 }
 
