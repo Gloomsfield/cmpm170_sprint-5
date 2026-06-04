@@ -43,8 +43,10 @@ export class DinoHead extends Phaser.GameObjects.Container {
 	}
 
 	snapToKey(keyData) {
-		this.target.x = this.linearizeIsometricX(keyData.isoX);
-		this.target.y = keyData.isoY + 10 + this.offsetFromKeyY;
+		let target = { x: 0.0, y: 0.0 };
+
+		target.x = this.linearizeIsometricX(keyData.isoX);
+		target.y = keyData.isoY + 10 + this.offsetFromKeyY;
 
 		this.clampedRange = this.pianoManager.getClampedRange(this.target.x);
 
@@ -55,6 +57,8 @@ export class DinoHead extends Phaser.GameObjects.Container {
 		);
 
 		this.offsetFromKeyX = 0.0;
+
+		this.movementTrack.addConstraint(new TrackConstraint(target.x, target.y));
 	}
 
 	isometrizeLinearDeltaX(x) {
@@ -89,7 +93,7 @@ export class DinoHead extends Phaser.GameObjects.Container {
 	}
 
 	update(delta) {
-		const newPos = this.movementTrack.trace(delta / 1000.0);
+		const newPos = this.movementTrack.trace( 1000.0 * delta / 1000.0);
 
 		this.x = newPos.x;
 		this.y = newPos.y;

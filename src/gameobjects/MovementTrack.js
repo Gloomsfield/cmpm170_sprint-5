@@ -10,7 +10,7 @@ export class MovementTrack {
 	constructor() {
 		this.constraints = [];
 
-		this._firstSegmentLength = 0.0;
+		this._firstSegmentLengths = new Array(10);
 
 		this._t = 0.0;
 	}
@@ -34,41 +34,31 @@ export class MovementTrack {
 		this.reconstruct();
 	}
 
-	calculateFirstSegmentLength() {
+	calculateFirstSegmentLengths() {
+		for(let i = 0; i < this._firstSegmentLengths.length; i++) {
+			this._firstSegmentLengths[i] = 0;
+		}
 
+		if(this.constraints.length < 2) { return; }
 
-		for(let i = 1; i <= 10; i++) {
-			const newPosition = {
-				x: evaluateHermite(i / 10.0)
+		let oldPosition = this.evaluateHermite2(0.0);
+
+		for(let i = 1; i <= this._firstSegmentLengths.length; i++) {
+			const newPosition = this.evaluateHermite2(i / 10.0);
+
+			const delta = {
+				x: newPosition.x - oldPosition.x,
+				y: newPosition.x - oldPosition.y
 			};
+
+			const distance = Math.sqrt(delta.x * delta.x + delta.y * delta.y);
+
+			this._firstSegmentLength += distance;
 		}
 	}
 
 	reconstruct() {
-		let sigma = 0;
-
-		for(let i = 1; i < this.constraints.length - 1; i++) {
-			let oldPosition = trace(0);
-
-			for(let j = 1; j <= 10; j++) {
-				const newPosition = {
-					x: evaluateHermite()
-				};
-
-				const delta = {
-					x: newPosition.x - oldPosition.x,
-					y: newPosition.y - oldPosition.y
-				};
-
-				let distance = Math.sqrt(delta.x * delta.x + delta.y * delta.y);
-
-				sigma += distance;
-
-				oldPosition = newPosition;
-			}
-		}
-
-		length = sigma;
+		this.calculateFirstSegmentLength();
 	}
 
 	evaluateHermite(q0, q1, n0, n1, t) {
@@ -80,28 +70,46 @@ export class MovementTrack {
 		return q0 * term1 + n0 * term2 + q1 * term3 + n1 * term4;
 	}
 
-	trace(deltaT) {
-		this._t += deltaT;
+	getTangentAtIndex(index) {
+		if(this.constraints.length < 3) { return { x: 0.0, y: 0.0 }; }
 
-		if(this._t > 1.0) {
-			this._t -= 1.0;
-			this.removeConstraint(0);
-		}
+		if(index == 0 || index == this.constraints.length - 1) { return { x: 0.0, y: 0.0 }; }
 
-		if(this._t > this.constraints.length) { return { x: 0.0, y: 0.0}; }
+		return {
+			x: 0.5 * (this.constraints[index + 1].x - this.constraints[index].x + this.constraints[index].x - this.constraints[index - 1].x),
+			y: 0.5 * (this.constraints[index + 1].y - this.constraints[index].y + this.constraints[index].y - this.constraints[index - 1].y)
+		};
+	}
 
-		const index = Math.floor(this._t);
-		const offsetT = this._t - index;
+	evaluateHermite2(t) {
+		const index = Math.floor(t);
+		const offsetT = t - index;
+
+		if(this.constraints.length == 1) { return this.constraints[0]; }
+		if(this.constraints.length < 2) { return; }
 
 		const p0 = this.constraints[index];
 		const p1 = index + 1 < this.constraints.length ? this.constraints[index + 1] : p0;
-		const m0 = index - 1 > -1 ? { x: p0.x - this.constraints[index - 1].x, y: p0.y - this.constraints[index - 1].y } : { x: 0.0, y: 0.0 };
-		const m1 = index + 2 < this.constraints.length ? { x: p1.x - this.constraints[index - 1].x, y: p0.y - this.constraints[index - 1].y } : { x: 0.0, y: 0.0 };
+		const m0 = this.getTangentAtIndex(index);
+		const m1 = this.getTangentAtIndex(index + 1);
 
 		return {
 			x: this.evaluateHermite(p0.x, p1.x, m0.x, m1.x, offsetT),
 			y: this.evaluateHermite(p0.y, p1.y, m0.y, m1.y, offsetT)
 		};
+	}
+
+	trace(deltaT) {
+		if(this._t > 1.0) {
+			this._t -= 1.0;
+			this.removeConstraint(0);
+		}
+
+		this._t += deltaT / this._firstSegmentLengths[Math.floor(this._t * this._firstSegmentLengths.length)];
+
+		if(this._t > this.constraints.length) { return { x: 0.0, y: 0.0}; }
+
+		return this.evaluateHermite2(this._t);
 	}
 }
 
