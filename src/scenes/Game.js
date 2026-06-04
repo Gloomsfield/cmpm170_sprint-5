@@ -16,7 +16,7 @@ export class Game extends Phaser.Scene {
 
 		this.dinoHead = new DinoHead(this, 500, 200, this.pianoManager);
 
-		this.time.delayedCall(10000, () => {this.dinoHead.changeToSadDino();});
+		this.time.delayedCall(15000, () => {this.dinoHead.changeToSadDino();});
 
 		this.input.on("pointermove", this.dinoHead.handlePointerMoved, this.dinoHead);
 

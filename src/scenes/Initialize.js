@@ -4,7 +4,10 @@ export class Initialize extends Phaser.Scene {
 		this.onLoadSceneKey = sceneKey ?? "mainMenu_scene";
 	}
 
-	preload() {}
+	preload() {
+		this.load.path = './assets/font-files/'
+		this.load.font('fancy', 'Fancy.ttf', 'truetype')
+	}
 
 	create() {
 		this.scene.launch("loadAssets_scene").scene.events.once("create", () => { this.scene.start(this.onLoadSceneKey); });
