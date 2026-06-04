@@ -10,11 +10,12 @@ const urlQueryParams = new URLSearchParams(window.location.search);
 
 const phaserConfig = {
 	type: Phaser.WEBGL,
+	pixelArt: true,
 	parent: "phaserCanvas",
 	width: 1080,
 	height: 650,
 	scale: { autoCenter: Phaser.Scale.CENTER_BOTH, },
-	backgroundColor: "#7db1c7",
+	backgroundColor: "#ffffff",
 	scene: [ new Initialize(urlQueryParams.get("startScene")), LoadAssets, MainMenu, Game, End, ],
 };
 
