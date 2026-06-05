@@ -11,7 +11,6 @@ export class PianoManager {
 		this.hoveredKeyIndex = Math.floor(PianoConfig.keyCount / 2.0);
 		this.pressedKeyIndex = -1;
 
-		this.startTime = scene.time.now;
 		this.noteHistory = [];
 
 		scene.add.existing(this);
@@ -33,6 +32,9 @@ export class PianoManager {
 		this.pianoForegroundSprite = scene.add.sprite(280, 200, "piano-foreground_image").setScale(2.0);
 
 		this.pianoForegroundSprite.setDepth(999);
+
+		this.hasInitialized = false;
+		this.startTime = 0;
 
         this.createKeys();
     }
@@ -78,6 +80,11 @@ export class PianoManager {
 	}
 
     update(dinoInstance) {
+		if(!this.hasInitialized) {
+			this.hasInitialized = true;
+			this.startTime = this.scene.time.now;
+		}
+
 		let newHoveredKeyIndex = Math.floor((23) * (dinoInstance.x - 155.0) / 495.0);
 
 		if(newHoveredKeyIndex != this.hoveredKeyIndex) {

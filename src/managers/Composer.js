@@ -23,14 +23,14 @@ export class Composer {
 		});
 
         for(const note of songData) {
+			console.log(this.noteTiming);
 
             this.scene.time.delayedCall(note.noteTiming, () => {
                 
                 const sound = this.noteSounds[note.noteIndex];
                 sound.stop();
                 sound.play();
-                }
-            );
+            });
         }
     }
 }
