@@ -10,7 +10,6 @@ export class DinoHead extends Phaser.GameObjects.Container {
 
 		this.movementTrack = new MovementTrack();
 		this.movementTrack.addConstraint(new TrackConstraint(350.0, 620.0));
-		this.movementTrack.addConstraint(new TrackConstraint(0.0, 0.0));
 
         this.setDepth(1000);
         this.sprite = scene.add.sprite(350, 620, "dino-head");
@@ -93,10 +92,7 @@ export class DinoHead extends Phaser.GameObjects.Container {
 	}
 
 	update(delta) {
-		const newPos = this.movementTrack.trace( 1000.0 * delta / 1000.0);
-
-		this.x = newPos.x;
-		this.y = newPos.y;
+		this.movementTrack.trace(delta / 1.0, this);
 	}
 }
 
