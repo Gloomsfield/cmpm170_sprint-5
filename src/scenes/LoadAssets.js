@@ -11,6 +11,10 @@ export class LoadAssets extends Phaser.Scene {
 		this.load.image("dino-head", "./assets/dino-art/dino.png");
 		this.load.image("dino-head2", "./assets/dino-art/dino2.png");
 
+		this.load.audio("wind", "./assets/other-audio/wind.mp3");
+		this.load.audio("fade", "./assets/other-audio/fade.wav");
+		this.load.audio("screech", "./assets/other-audio/screech.wav");
+
 		this.load.image("B1", "./assets/background-art/Blue1.png");
 		this.load.image("B2", "./assets/background-art/Blue2.png");
 		this.load.image("R1", "./assets/background-art/Red1.png");
