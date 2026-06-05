@@ -12,12 +12,16 @@ export class End extends Phaser.Scene {
 
     create() {
         this.cameras.main.setBackgroundColor("#ffffff");
-        this.add.text(this.scale.width / 2, 200, "Your Last Sonnet", {color: "#000000", fontSize: "48px"}).setOrigin(0.5);
+        this.add.text(this.scale.width / 2, 300, "Your Last Sonata", 
+        {
+            color: "#000000",
+            fontFamily: "fancy",
+            fontSize: "64px"
+        }).setOrigin(0.5);
 
         this.composer = new Composer(this);
         this.composer.playSong(this.songData);
     }
-    
 }
 
 /*

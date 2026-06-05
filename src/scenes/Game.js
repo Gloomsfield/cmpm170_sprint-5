@@ -1,3 +1,4 @@
+import { BackgroundManager } from "@managers/BackgroundManager.js";
 import { PianoManager } from "@managers/PianoManager.js";
 import { DinoHead } from "@gameobjects/DinoHead.js";
 
@@ -12,19 +13,23 @@ export class Game extends Phaser.Scene {
 			this.input.mouse.requestPointerLock();
 		});
 
+		this.gameLength = 20000;
+
+		this.backgroundManager = new BackgroundManager(this, this.gameLength);
+
 		this.pianoManager = new PianoManager(this);
 
 		this.dinoHead = new DinoHead(this, 500, 200, this.pianoManager);
 
-		this.time.delayedCall(10000, () => {this.dinoHead.changeToSadDino();});
+		this.time.delayedCall(15000, () => {this.dinoHead.changeToSadDino();});
 
 		this.input.on("pointermove", this.dinoHead.handlePointerMoved, this.dinoHead);
 
-		this.gameLength = 20000;
 		this.time.delayedCall(this.gameLength, () => {this.endGame();});
 	}
 
 	 update(_, delta) {
+		this.backgroundManager.update();
 		this.pianoManager.update(this.dinoHead);
 		this.dinoHead.update(delta);
 	}
