@@ -4,6 +4,7 @@ export class MainMenu extends Phaser.Scene {
 	}
 
 	 create() {
+		this.input.mouse.releasePointerLock();
 
         this.cameras.main.setBackgroundColor("#000000");
         this.add.text(this.scale.width / 2, 300, "Play?", 

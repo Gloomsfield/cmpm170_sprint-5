@@ -13,6 +13,14 @@ export class Composer {
     }
 
     playSong(songData) {
+		this.scene.time.addEvent({
+			delay: 30000,
+			callback: () => {
+				this.scene.scene.start("mainMenu_scene");
+			},
+			callbackScope: this,
+			loop: false,
+		});
 
         for(const note of songData) {
 
