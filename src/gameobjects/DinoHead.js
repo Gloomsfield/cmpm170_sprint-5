@@ -24,10 +24,10 @@ export class DinoHead extends Phaser.GameObjects.Container {
     }
 
     handlePointerMoved(pointer) {
-		const lowestY = PianoConfig.pianoY + (PianoConfig.keyHeight / 2.0) - (this.x * Math.atan(Math.PI / 6.0));
+		const lowestY = -this.x * Math.atan(Math.PI / 6.0) + 600;
 
 		this.setPosition(
-			Phaser.Math.Clamp(this.x + pointer.movementX, PianoConfig.leftmostDinoX, PianoConfig.rightmostDinoX),
+			Phaser.Math.Clamp(this.x + pointer.movementX, 155.0, 650.0),
 			Phaser.Math.Clamp(this.y + pointer.movementY, PianoConfig.highestDinoY, lowestY)
 		);
     }
@@ -38,7 +38,7 @@ export class DinoHead extends Phaser.GameObjects.Container {
 	}
 
 	updateHover(hoverIndex) {
-		const depth = 104 - PianoConfig.keyCount + hoverIndex * 2;
+		const depth = 104 + hoverIndex * 2;
 		this.setDepth(depth);
 	}
 }

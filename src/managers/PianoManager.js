@@ -30,13 +30,18 @@ export class PianoManager {
 			}
 		}
 
+		this.pianoSprite = scene.add.sprite(280, 230, "piano_image").setScale(2.0);
+		this.pianoForegroundSprite = scene.add.sprite(280, 200, "piano-foreground_image").setScale(2.0);
+
+		this.pianoForegroundSprite.setDepth(999);
+
         this.createKeys();
     }
     
     createKeys() {
 		for(let keyObject of this.tilemapKeys) {
-			const x = keyObject.y * 1.25 - 300.0;
-			const y = -x * Math.atan(Math.PI / 6.0) + 500;
+			const x = keyObject.y * 2.25 - 730.0;
+			const y = -x * Math.atan(Math.PI / 6.0) + 600;
 
 			console.log(`${x}, ${y}`);
 
@@ -53,9 +58,9 @@ export class PianoManager {
 				new WhiteKey(this.scene, x, y, keyObject.detune) :
 				new BlackKey(this.scene, x, y, keyObject.detune);
 
-			console.log(keyObject.properties);
-
-			newKey.setScale(3.0);
+			newKey.setScale(6.0);
+			newKey.setDepth((Math.floor((730 - x) / 2.25) - 48) / 4 + 101);
+			console.log(newKey.depth);
 
 			newKey.on("note-pressed", this.playNote, this);
 			newKey.on("note-released", (noteName) => {});
@@ -74,7 +79,8 @@ export class PianoManager {
 	}
 
     update(dinoInstance) {
-		let newHoveredKeyIndex = PianoConfig.keyCount - Math.floor((dinoInstance.x - PianoConfig.pianoX) / (PianoConfig.pianoWidth * PianoConfig.pianoScale / (PianoConfig.keyCount - 1)));
+		let newHoveredKeyIndex = Math.floor(-4.0 + (this.keys.length + 3.0) * (1.0 - (dinoInstance.x - 155.0) / 595.0));
+		console.log(newHoveredKeyIndex);
 
 		if(newHoveredKeyIndex != this.hoveredKeyIndex) {
 			dinoInstance.updateHover(newHoveredKeyIndex);
