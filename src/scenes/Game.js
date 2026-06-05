@@ -29,6 +29,8 @@ export class Game extends Phaser.Scene {
 
 		this.input.on("pointermove", this.dinoHead.handlePointerMoved, this.dinoHead);
 
+		this.time.delayedCall(8000, () => {this.windSound = this.sound.add("wind", {loop: true, volume: 0.15});this.windSound.play();});
+
 		this.time.delayedCall(this.gameLength, () => {this.endGame();});
 	}
 

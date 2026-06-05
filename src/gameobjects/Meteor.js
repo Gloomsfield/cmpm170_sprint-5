@@ -12,13 +12,13 @@ export class Meteor {
         this.startX = this.x;
         this.startY = this.y;
 
-        this.appearTime = 15000;
+        this.appearTime = 15500;
         this.fadeDuration = 16000;
 
         this.startScale = 1;
         this.endScale = 9;
 
-        this.moveSpeedX = -0.5;
+        this.moveSpeedX = -0.3;
         this.moveSpeedY = 0.4;
 
         this.startAlpha = 0;
