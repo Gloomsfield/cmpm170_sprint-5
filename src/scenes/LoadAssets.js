@@ -27,6 +27,12 @@ export class LoadAssets extends Phaser.Scene {
 		this.load.image("meteor", "./assets/background-art/meteor.png");
 
 		this.load.tilemapTiledJSON("piano-layout_tilemap", "./assets/tilemaps/piano_layout.tmj");
+
+		this.load.once("complete", () => { this.events.emit("loadcomplete"); });
+	}
+
+	create(sceneKey) {
+		this.scene.start(sceneKey);
 	}
 }
 

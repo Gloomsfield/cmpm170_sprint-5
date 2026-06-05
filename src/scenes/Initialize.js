@@ -10,7 +10,7 @@ export class Initialize extends Phaser.Scene {
 	}
 
 	create() {
-		this.scene.launch("loadAssets_scene").scene.events.once("create", () => { this.scene.start(this.onLoadSceneKey); });
+		this.scene.start("loadAssets_scene", this.onLoadSceneKey);
 	}
 }
 
