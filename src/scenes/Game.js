@@ -32,6 +32,8 @@ export class Game extends Phaser.Scene {
 
 		this.time.delayedCall(8000, () => {this.windSound = this.sound.add("wind", {loop: true, volume: 0.15});this.windSound.play();});
 
+		this.time.delayedCall(18000, () => {this.cameras.main.shake(2000, 0.003);});
+
 		this.time.delayedCall(19500, () => {WhiteFade.fadeIn(this, 150, () => {this.endGame();});});
 	}
 
