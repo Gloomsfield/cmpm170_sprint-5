@@ -16,6 +16,10 @@ export const PianoConfig = {
 
     pianoScale: 0.7,
 
+	get leftmostDinoX() { return PianoConfig.pianoX / PianoConfig.pianoScale; },
+	get rightmostDinoX() { return PianoConfig.pianoWidth - PianoConfig.pianoX / PianoConfig.pianoScale; },
+	highestDinoY: -100,
+
     pressThreshold: 30
 };
 
