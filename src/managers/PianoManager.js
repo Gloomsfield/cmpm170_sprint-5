@@ -1,4 +1,4 @@
-import { PianoKey } from "@gameobjects/PianoKey.js";
+import { WhiteKey, BlackKey } from "@gameobjects/PianoKey.js";
 import { PianoConfig } from "@data/PianoConfig.js";
 
 // manages piano behavior
@@ -11,41 +11,74 @@ export class PianoManager {
 		this.hoveredKeyIndex = Math.floor(PianoConfig.keyCount / 2.0);
 		this.pressedKeyIndex = -1;
 
-        this.createKeys();
-
 		this.startTime = scene.time.now;
 		this.noteHistory = [];
 
 		scene.add.existing(this);
+
+		const pianoLayout = scene.add.tilemap("piano-layout_tilemap");
+		this.tilemapKeys = [];
+
+		for(let layer of pianoLayout.objects) {
+			if(layer.name == "keys") {
+				for(let key of layer.objects) {
+					this.tilemapKeys.push(key);
+				}
+
+				break;
+			}
+		}
+
+		this.pianoSprite = scene.add.sprite(280, 230, "piano_image").setScale(2.0);
+		this.pianoForegroundSprite = scene.add.sprite(280, 200, "piano-foreground_image").setScale(2.0);
+
+		this.pianoForegroundSprite.setDepth(999);
+
+        this.createKeys();
     }
     
     createKeys() {
-        for(let i = PianoConfig.keyCount - 1; i >= 0; i--) {
-            const spacing = (PianoConfig.pianoWidth * PianoConfig.pianoScale) / (PianoConfig.keyCount - 1);
+		for(let keyObject of this.tilemapKeys) {
+			const x = 760 - (keyObject.y / Math.atan(Math.PI / 6.0) - 665.0);
+			const y = -x * Math.atan(Math.PI / 6.0) + 630.0;
 
-            const x = PianoConfig.pianoX + i * spacing;
-			const y = PianoConfig.pianoY - x * Math.atan(Math.PI / 6.0);
+			let isWhite = false;
+			let detune = 0;
 
-            const key = new PianoKey(this.scene, x, y, PianoConfig.pianoScale, i);
-            
-			key.on("note-pressed", this.playNote, this);
-			key.on("note-released", (noteIndex) => {});
+			for(let property of keyObject.properties) {
+				if(property.name == "isWhite") {
+					isWhite = property.value;
 
-            this.keys.push(key);
-        }
+					continue;
+				}
+				
+				if(property.name == "detune") {
+					detune = property.value;
+
+					continue;
+				}
+			}
+			
+			const newKey = isWhite ?
+				new WhiteKey(this.scene, x, y, detune) :
+				new BlackKey(this.scene, x, y, detune);
+
+			newKey.setScale(6.0);
+			newKey.setDepth((Math.floor((730 - x) / 2.25) - 48) / 4 + 101);
+
+			newKey.on("note-pressed", this.playNote, this);
+			newKey.on("note-released", (noteName) => {});
+
+			this.keys.push(newKey);
+		}
     }
 
 	playNote(noteData) {
-		this.noteHistory.push({
-			noteIndex: noteData.noteIndex,
-			noteTiming: this.scene.time.now - this.startTime,
-		});
-
 		noteData.noteSound.play();
 	}
 
     update(dinoInstance) {
-		let newHoveredKeyIndex = PianoConfig.keyCount - Math.floor((dinoInstance.x - PianoConfig.pianoX) / (PianoConfig.pianoWidth * PianoConfig.pianoScale / (PianoConfig.keyCount - 1)));
+		let newHoveredKeyIndex = Math.floor((23) * (dinoInstance.x - 155.0) / 495.0);
 
 		if(newHoveredKeyIndex != this.hoveredKeyIndex) {
 			dinoInstance.updateHover(newHoveredKeyIndex);
@@ -61,10 +94,15 @@ export class PianoManager {
 		}
 
 		if(!this.keys[newHoveredKeyIndex].isPressed) {
-			if(this.keys[newHoveredKeyIndex].pressedThreshold <= dinoInstance.y) {
-				this.keys[newHoveredKeyIndex].setPressed(true);
+			if(this.keys[this.hoveredKeyIndex].y <= dinoInstance.y + 20.0) {
+				this.keys[this.hoveredKeyIndex].setPressed(true);
+
+				this.noteHistory.push({
+					noteIndex: this.hoveredKeyIndex,
+					noteTiming: this.scene.time.now - this.startTime,
+				});
 			}
-		} else if(dinoInstance.y < this.keys[this.hoveredKeyIndex].pressedThreshold) {
+		} else if(dinoInstance.y + 20.0 < this.keys[this.hoveredKeyIndex].y) {
 			this.keys[this.hoveredKeyIndex].setPressed(false);
 		}
     }

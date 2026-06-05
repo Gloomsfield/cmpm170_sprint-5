@@ -6,7 +6,10 @@ export class LoadAssets extends Phaser.Scene {
 	preload() {
 		this.load.audio("a440hz-c4_audio", "./assets/piano-samples/a440hz-c4.mp3");
 
+		this.load.image("piano_image", "./assets/piano-art/piano.png");
+		this.load.image("piano-foreground_image", "./assets/piano-art/piano-foreground.png");
 		this.load.image("piano-key_image", "./assets/piano-art/piano-key.png");
+		this.load.image("piano-key-black_image", "./assets/piano-art/piano-key-black.png");
 
 		this.load.image("dino-head", "./assets/dino-art/dino.png");
 		this.load.image("dino-head2", "./assets/dino-art/dino2.png");
@@ -21,6 +24,14 @@ export class LoadAssets extends Phaser.Scene {
 		this.load.image("R3", "./assets/background-art/Red3.png");
 
 		this.load.image("meteor", "./assets/background-art/meteor.png");
+
+		this.load.tilemapTiledJSON("piano-layout_tilemap", "./assets/tilemaps/piano_layout.tmj");
+
+		this.load.once("complete", () => { this.events.emit("loadcomplete"); });
+	}
+
+	create(sceneKey) {
+		this.scene.start(sceneKey);
 	}
 }
 
