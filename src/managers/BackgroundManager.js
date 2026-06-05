@@ -4,7 +4,6 @@ export class BackgroundManager {
         this.scene = scene;
         this.gameLength = gameLength > 1000 ? gameLength / 1000 : gameLength;
 
-        this.startTime = scene.time.now;
         this.scale = 4;
 
         this.blueFadeStart = 6;
@@ -14,6 +13,9 @@ export class BackgroundManager {
         this.redSpeed = 30;
 
         this.createLayers();
+
+		this.hasInitialized = false;
+		this.startTime = 0;
     }
 
     speedMultiplier(progress) {
@@ -67,6 +69,11 @@ export class BackgroundManager {
     }
 
     update() {
+		if(!this.hasInitialized) {
+			this.startTime = this.scene.time.now;
+			this.hasInitialized = true;
+		}
+
         const elapsed = (this.scene.time.now - this.startTime) / 1000;
 
         const movementProgress = Phaser.Math.Clamp(elapsed / (this.gameLength * 1000), 0, 1);

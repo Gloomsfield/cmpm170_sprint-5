@@ -4,8 +4,6 @@ export class Meteor {
         this.scene = scene;
         this.gameLength = gameLength;
 
-        this.startTime = scene.time.now;
-
         this.x = scene.cameras.main.centerX + 700;
         this.y = -200;
 
@@ -33,6 +31,7 @@ export class Meteor {
     }
 
     createMeteor() {
+        this.startTime = this.scene.time.now;
         this.meteor = this.scene.add.image(this.x, this.y, "meteor")
         .setOrigin(0.5).setDepth(this.depth).setScale(this.startScale).setAlpha(this.startAlpha);
     }
