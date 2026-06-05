@@ -43,20 +43,26 @@ export class PianoManager {
 			const x = keyObject.y * 2.25 - 730.0;
 			const y = -x * Math.atan(Math.PI / 6.0) + 600;
 
-			console.log(`${x}, ${y}`);
-
 			let isWhite = false;
+			let detune = 0;
 
 			for(let property of keyObject.properties) {
 				if(property.name == "isWhite") {
 					isWhite = property.value;
-					break;
+
+					continue;
+				}
+				
+				if(property.name == "detune") {
+					detune = property.value;
+
+					continue;
 				}
 			}
 			
 			const newKey = isWhite ?
-				new WhiteKey(this.scene, x, y, keyObject.detune) :
-				new BlackKey(this.scene, x, y, keyObject.detune);
+				new WhiteKey(this.scene, x, y, detune) :
+				new BlackKey(this.scene, x, y, detune);
 
 			newKey.setScale(6.0);
 			newKey.setDepth((Math.floor((730 - x) / 2.25) - 48) / 4 + 101);
@@ -80,7 +86,6 @@ export class PianoManager {
 
     update(dinoInstance) {
 		let newHoveredKeyIndex = Math.floor(-4.0 + (this.keys.length + 3.0) * (1.0 - (dinoInstance.x - 155.0) / 595.0));
-		console.log(newHoveredKeyIndex);
 
 		if(newHoveredKeyIndex != this.hoveredKeyIndex) {
 			dinoInstance.updateHover(newHoveredKeyIndex);
@@ -96,10 +101,11 @@ export class PianoManager {
 		}
 
 		if(!this.keys[newHoveredKeyIndex].isPressed) {
-			if(this.keys[newHoveredKeyIndex].pressedThreshold <= dinoInstance.y) {
+			console.log("true");
+			if(100 <= dinoInstance.y) {
 				this.keys[newHoveredKeyIndex].setPressed(true);
 			}
-		} else if(dinoInstance.y < this.keys[this.hoveredKeyIndex].pressedThreshold) {
+		} else if(dinoInstance.y < this.keys[this.hoveredKeyIndex].y) {
 			this.keys[this.hoveredKeyIndex].setPressed(false);
 		}
     }

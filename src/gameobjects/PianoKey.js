@@ -16,6 +16,7 @@ export class PianoKey extends Phaser.GameObjects.Sprite {
 
 		this.pressedThreshold = this.isoY - 10.0;
 
+		console.log(detune);
 		this.noteData = {
 			noteSound: scene.sound.add("a440hz-c4_audio").setDetune(detune),
 
