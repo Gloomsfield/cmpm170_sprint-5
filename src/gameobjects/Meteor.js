@@ -10,7 +10,7 @@ export class Meteor {
         this.startX = this.x;
         this.startY = this.y;
 
-        this.appearTime = 15000;
+        this.appearTime = 10000;
         this.fadeDuration = 17000;
 
         this.startScale = 1;
