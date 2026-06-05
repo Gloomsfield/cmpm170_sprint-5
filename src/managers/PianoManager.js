@@ -20,7 +20,6 @@ export class PianoManager {
 		this.tilemapKeys = [];
 
 		for(let layer of pianoLayout.objects) {
-			console.log(layer.name);
 			if(layer.name == "keys") {
 				for(let key of layer.objects) {
 					this.tilemapKeys.push(key);
@@ -40,8 +39,8 @@ export class PianoManager {
     
     createKeys() {
 		for(let keyObject of this.tilemapKeys) {
-			const x = keyObject.y * 2.25 - 730.0;
-			const y = -x * Math.atan(Math.PI / 6.0) + 600;
+			const x = 760 - (keyObject.y / Math.atan(Math.PI / 6.0) - 665.0);
+			const y = -x * Math.atan(Math.PI / 6.0) + 630.0;
 
 			let isWhite = false;
 			let detune = 0;
@@ -66,7 +65,6 @@ export class PianoManager {
 
 			newKey.setScale(6.0);
 			newKey.setDepth((Math.floor((730 - x) / 2.25) - 48) / 4 + 101);
-			console.log(newKey.depth);
 
 			newKey.on("note-pressed", this.playNote, this);
 			newKey.on("note-released", (noteName) => {});
@@ -76,16 +74,11 @@ export class PianoManager {
     }
 
 	playNote(noteData) {
-		this.noteHistory.push({
-			noteIndex: noteData.noteIndex,
-			noteTiming: this.scene.time.now - this.startTime,
-		});
-
 		noteData.noteSound.play();
 	}
 
     update(dinoInstance) {
-		let newHoveredKeyIndex = Math.floor(-4.0 + (this.keys.length + 3.0) * (1.0 - (dinoInstance.x - 155.0) / 595.0));
+		let newHoveredKeyIndex = Math.floor((23) * (dinoInstance.x - 155.0) / 495.0);
 
 		if(newHoveredKeyIndex != this.hoveredKeyIndex) {
 			dinoInstance.updateHover(newHoveredKeyIndex);
@@ -101,11 +94,15 @@ export class PianoManager {
 		}
 
 		if(!this.keys[newHoveredKeyIndex].isPressed) {
-			console.log("true");
-			if(100 <= dinoInstance.y) {
-				this.keys[newHoveredKeyIndex].setPressed(true);
+			if(this.keys[this.hoveredKeyIndex].y <= dinoInstance.y + 20.0) {
+				this.keys[this.hoveredKeyIndex].setPressed(true);
+
+				this.noteHistory.push({
+					noteIndex: this.hoveredKeyIndex,
+					noteTiming: this.scene.time.now - this.startTime,
+				});
 			}
-		} else if(dinoInstance.y < this.keys[this.hoveredKeyIndex].y) {
+		} else if(dinoInstance.y + 20.0 < this.keys[this.hoveredKeyIndex].y) {
 			this.keys[this.hoveredKeyIndex].setPressed(false);
 		}
     }

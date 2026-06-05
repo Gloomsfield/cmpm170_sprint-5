@@ -24,7 +24,7 @@ export class DinoHead extends Phaser.GameObjects.Container {
     }
 
     handlePointerMoved(pointer) {
-		const lowestY = -this.x * Math.atan(Math.PI / 6.0) + 600;
+		const lowestY = -this.x * Math.atan(Math.PI / 6.0) + 650.0;
 
 		this.setPosition(
 			Phaser.Math.Clamp(this.x + pointer.movementX, 155.0, 650.0),
@@ -38,7 +38,7 @@ export class DinoHead extends Phaser.GameObjects.Container {
 	}
 
 	updateHover(hoverIndex) {
-		const depth = 104 + hoverIndex * 2;
+		const depth = 102 + (23 - hoverIndex) * 2;
 		this.setDepth(depth);
 	}
 }
