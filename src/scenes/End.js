@@ -1,5 +1,6 @@
 // ending scene after meteor
 import { Composer } from "@managers/Composer.js";
+import { WhiteFade } from "@managers/WhiteFade.js";
 
 export class End extends Phaser.Scene {
     constructor() {
@@ -12,6 +13,8 @@ export class End extends Phaser.Scene {
 
     create() {
         this.cameras.main.setBackgroundColor("#ffffff");
+        WhiteFade.createWhiteOverlay(this);
+        
         this.add.text(this.scale.width / 2, 300, "Your Last Sonata", 
         {
             color: "#000000",
@@ -20,7 +23,10 @@ export class End extends Phaser.Scene {
         }).setOrigin(0.5);
 
         this.composer = new Composer(this);
-        this.composer.playSong(this.songData);
+        const screech = this.sound.add("screech", {volume: 0.25});
+
+        screech.once("complete", () => {WhiteFade.fadeOut(this, 1000, () => {this.composer.playSong(this.songData);});});
+        screech.play();
     }
 }
 
