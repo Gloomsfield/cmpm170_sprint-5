@@ -7,7 +7,7 @@ export class BackgroundManager {
         this.startTime = scene.time.now;
         this.scale = 4;
 
-        this.blueFadeStart = 3;
+        this.blueFadeStart = 6;
         this.blueFadeDuration = 12;
         this.redFadeStart = 15;
 

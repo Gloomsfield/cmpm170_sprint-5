@@ -2,6 +2,7 @@ import { BackgroundManager } from "@managers/BackgroundManager.js";
 import { Meteor } from "@gameobjects/Meteor.js";
 import { PianoManager } from "@managers/PianoManager.js";
 import { DinoHead } from "@gameobjects/DinoHead.js";
+import { WhiteFade } from "@managers/WhiteFade.js";
 
 
 // actual gameplay scene
@@ -31,7 +32,9 @@ export class Game extends Phaser.Scene {
 
 		this.time.delayedCall(8000, () => {this.windSound = this.sound.add("wind", {loop: true, volume: 0.15});this.windSound.play();});
 
-		this.time.delayedCall(this.gameLength, () => {this.endGame();});
+		this.time.delayedCall(18000, () => {this.cameras.main.shake(2000, 0.003);});
+
+		this.time.delayedCall(19500, () => {WhiteFade.fadeIn(this, 150, () => {this.endGame();});});
 	}
 
 	 update(_, delta) {
@@ -42,12 +45,14 @@ export class Game extends Phaser.Scene {
 	}
 
 	endGame() {
-		this.scene.start("end",
-			{
-				songData: this.pianoManager.noteHistory,
-    			songLength: this.time.now - this.pianoManager.startTime
-			}
-		);
+		if (this.windSound) {
+			this.windSound.stop();
+		}
+
+		this.scene.start("end", {
+			songData: this.pianoManager.noteHistory,
+			songLength: this.time.now - this.pianoManager.startTime
+		});
 	}
 }
 /*
