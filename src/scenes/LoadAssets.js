@@ -16,6 +16,8 @@ export class LoadAssets extends Phaser.Scene {
 		this.load.image("R1", "./assets/background-art/Red1.png");
 		this.load.image("R2", "./assets/background-art/Red2.png");
 		this.load.image("R3", "./assets/background-art/Red3.png");
+
+		this.load.image("meteor", "./assets/background-art/meteor.png");
 	}
 }
 
