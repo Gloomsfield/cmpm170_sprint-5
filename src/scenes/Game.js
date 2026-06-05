@@ -1,6 +1,8 @@
 import { BackgroundManager } from "@managers/BackgroundManager.js";
+import { Meteor } from "@gameobjects/Meteor.js";
 import { PianoManager } from "@managers/PianoManager.js";
 import { DinoHead } from "@gameobjects/DinoHead.js";
+
 
 // actual gameplay scene
 export class Game extends Phaser.Scene {
@@ -17,6 +19,8 @@ export class Game extends Phaser.Scene {
 
 		this.backgroundManager = new BackgroundManager(this, this.gameLength);
 
+		this.meteor = new Meteor(this, this.gameLength);
+
 		this.pianoManager = new PianoManager(this);
 
 		this.dinoHead = new DinoHead(this, 500, 200, this.pianoManager);
@@ -30,6 +34,7 @@ export class Game extends Phaser.Scene {
 
 	 update(_, delta) {
 		this.backgroundManager.update();
+		this.meteor.update();
 		this.pianoManager.update(this.dinoHead);
 		this.dinoHead.update(delta);
 	}
