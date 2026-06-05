@@ -1,6 +1,5 @@
 // dino head controlled by mouse
 import { PianoConfig } from "@data/PianoConfig.js";
-import { MovementTrack, TrackConstraint } from "@gameobjects/MovementTrack.js";
 
 export class DinoHead extends Phaser.GameObjects.Container {
     constructor(scene, x, y, pianoManager) {
