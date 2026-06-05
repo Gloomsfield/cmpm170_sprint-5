@@ -24,7 +24,12 @@ export class DinoHead extends Phaser.GameObjects.Container {
     }
 
     handlePointerMoved(pointer) {
-		this.setPosition(Phaser.Math.Clamp(this.x + pointer.movementX, PianoConfig.leftmostDinoX, PianoConfig.rightmostDinoX), this.y + pointer.movementY);
+		const lowestY = PianoConfig.pianoY + (PianoConfig.keyHeight / 2.0) - (this.x * Math.atan(Math.PI / 6.0));
+
+		this.setPosition(
+			Phaser.Math.Clamp(this.x + pointer.movementX, PianoConfig.leftmostDinoX, PianoConfig.rightmostDinoX),
+			Phaser.Math.Clamp(this.y + pointer.movementY, PianoConfig.highestDinoY, lowestY)
+		);
     }
 
 	changeToSadDino() {
