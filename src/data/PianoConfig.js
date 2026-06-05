@@ -7,7 +7,7 @@ export const PianoConfig = {
     keyHeight: 60,
 
     pianoX: 100,
-    pianoY: 470,
+    pianoY: 600,
 
 	dinoUpperYOffset: 100,
 

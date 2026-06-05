@@ -2,28 +2,22 @@
 import { PianoConfig } from "@data/PianoConfig.js";
 
 export class PianoKey extends Phaser.GameObjects.Sprite {
-    constructor(scene, x, y, scale, noteIndex) {
-		super(scene, x, y, "piano-key_image");
+    constructor(scene, x, y, sprite, detune) {
+		super(scene, x, y, sprite);
 
-		this.setDepth(101 + PianoConfig.keyCount - noteIndex * 2);
+		this.setDepth(101 + PianoConfig.keyCount - (detune + 1200) / 100 * 2);
 
 		this.texture.setFilter(Phaser.Textures.FilterMode.Nearest);
 
-		this.setScale(scale * 6.5);
         scene.add.existing(this);
 
         this.isHovered = false;
         this.isPressed = false;
 
-		this.isoWidth = 30.0;
-		this.isoX = x / Math.atan(Math.PI / 6.0) + 75.0;
-		this.isoY = y;
-
 		this.pressedThreshold = this.isoY - 10.0;
 
 		this.noteData = {
-			noteIndex: noteIndex,
-			noteSound: scene.sound.add("a440hz-c4_audio").setDetune((noteIndex - 12) * 100.0),
+			noteSound: scene.sound.add("a440hz-c4_audio").setDetune(detune),
 
 			// TODO - handle velocity
 			velocity: undefined,
@@ -62,6 +56,28 @@ export class PianoKey extends Phaser.GameObjects.Sprite {
             this.setTint(0xffffff);
         }
     }
+}
+
+export class WhiteKey extends PianoKey {
+	constructor(scene, x, y, detune) {
+		super(scene, x, y, "piano-key_image", detune);
+	}
+}
+
+export class BlackKey extends PianoKey {
+	constructor(scene, x, y, detune) {
+		super(scene, x, y, "piano-key-black_image", detune);
+	}
+
+	updateVisuals() {
+		if(this.isPressed) {
+			this.setTintFill(0xff0000);
+		} else if(this.isHovered) {
+			this.setTintFill(0xffd700);
+		} else {
+			this.clearTint();
+		}
+	}
 }
 
 /*

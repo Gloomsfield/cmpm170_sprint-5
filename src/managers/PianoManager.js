@@ -1,4 +1,4 @@
-import { PianoKey } from "@gameobjects/PianoKey.js";
+import { WhiteKey, BlackKey } from "@gameobjects/PianoKey.js";
 import { PianoConfig } from "@data/PianoConfig.js";
 
 // manages piano behavior
@@ -11,28 +11,57 @@ export class PianoManager {
 		this.hoveredKeyIndex = Math.floor(PianoConfig.keyCount / 2.0);
 		this.pressedKeyIndex = -1;
 
-        this.createKeys();
-
 		this.startTime = scene.time.now;
 		this.noteHistory = [];
 
 		scene.add.existing(this);
+
+		const pianoLayout = scene.add.tilemap("piano-layout_tilemap");
+		this.tilemapKeys = [];
+
+		for(let layer of pianoLayout.objects) {
+			console.log(layer.name);
+			if(layer.name == "keys") {
+				for(let key of layer.objects) {
+					this.tilemapKeys.push(key);
+				}
+
+				break;
+			}
+		}
+
+        this.createKeys();
     }
     
     createKeys() {
-        for(let i = PianoConfig.keyCount - 1; i >= 0; i--) {
-            const spacing = (PianoConfig.pianoWidth * PianoConfig.pianoScale) / (PianoConfig.keyCount - 1);
+		for(let keyObject of this.tilemapKeys) {
+			const x = keyObject.y * 1.25 - 300.0;
+			const y = -x * Math.atan(Math.PI / 6.0) + 500;
 
-            const x = PianoConfig.pianoX + i * spacing;
-			const y = PianoConfig.pianoY - x * Math.atan(Math.PI / 6.0);
+			console.log(`${x}, ${y}`);
 
-            const key = new PianoKey(this.scene, x, y, PianoConfig.pianoScale, i);
-            
-			key.on("note-pressed", this.playNote, this);
-			key.on("note-released", (noteIndex) => {});
+			let isWhite = false;
 
-            this.keys.push(key);
-        }
+			for(let property of keyObject.properties) {
+				if(property.name == "isWhite") {
+					isWhite = property.value;
+					break;
+				}
+			}
+			
+			const newKey = isWhite ?
+				new WhiteKey(this.scene, x, y, keyObject.detune) :
+				new BlackKey(this.scene, x, y, keyObject.detune);
+
+			console.log(keyObject.properties);
+
+			newKey.setScale(3.0);
+
+			newKey.on("note-pressed", this.playNote, this);
+			newKey.on("note-released", (noteName) => {});
+
+			this.keys.push(newKey);
+		}
     }
 
 	playNote(noteData) {
