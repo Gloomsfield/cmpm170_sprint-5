@@ -27,16 +27,23 @@ export class Meteor {
 
         this.depth = -90;
 
+		this.hasInitialized = false;
+		this.startTime = 0.0;
+
         this.createMeteor();
     }
 
     createMeteor() {
-        this.startTime = this.scene.time.now;
         this.meteor = this.scene.add.image(this.x, this.y, "meteor")
         .setOrigin(0.5).setDepth(this.depth).setScale(this.startScale).setAlpha(this.startAlpha);
     }
 
     update() {
+		if(!this.hasInitialized) {
+			this.startTime = this.scene.time.now;
+			this.hasInitialized = true;
+		}
+
         const elapsed = this.scene.time.now - this.startTime;
 
         if (elapsed < this.appearTime) return;
