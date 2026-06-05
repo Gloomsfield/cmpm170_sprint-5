@@ -45,71 +45,28 @@ export class PianoManager {
 	}
 
     update(dinoInstance) {
-		let newHoveredIndex = this.hoveredKeyIndex;
+		let newHoveredKeyIndex = PianoConfig.keyCount - Math.floor((dinoInstance.x - PianoConfig.pianoX) / (PianoConfig.pianoWidth * PianoConfig.pianoScale / (PianoConfig.keyCount - 1)));
 
-		if(Math.abs(dinoInstance.offsetFromKeyX) > this.keys[this.hoveredKeyIndex].isoWidth / 2.0) {
-			const direction = -Math.sign(dinoInstance.offsetFromKeyX);
+		if(newHoveredKeyIndex != this.hoveredKeyIndex) {
+			dinoInstance.updateHover(newHoveredKeyIndex);
 
-			newHoveredIndex = this.hoveredKeyIndex + direction;
-
-			if(0 <= newHoveredIndex && newHoveredIndex < PianoConfig.keyCount) {
-				dinoInstance.snapToKey({
-					isoX: this.keys[newHoveredIndex].isoX,
-					isoY: this.keys[newHoveredIndex].isoY,
-					keyIndex: newHoveredIndex,
-				});
-
-				dinoInstance.updateHover(newHoveredIndex);
-            	
-				this.keys[this.hoveredKeyIndex].setHovered(false);
-				this.keys[newHoveredIndex].setHovered(true);
-            	
-				this.hoveredKeyIndex = newHoveredIndex;
-            	
-				if(this.pressedKeyIndex !== -1) {
-					this.keys[this.pressedKeyIndex].setPressed(false);
-            	
-					this.pressedKeyIndex += direction;
-            	
-					if(this.pressedKeyIndex < 0 || PianoConfig.keyCount <= this.pressedKeyIndex) {
-						this.pressedKeyIndex = -1;
-
-						return;
-					}
-            	
-					this.keys[this.pressedKeyIndex].setPressed(true);
-				}
-			}
-		}
-
-		if(this.pressedKeyIndex !== -1) {
-			if(dinoInstance.y <= this.keys[this.pressedKeyIndex].pressedThreshold) {
-				this.keys[this.pressedKeyIndex].setPressed(false);
-				
-				this.pressedKeyIndex = -1;
+			if(this.keys[this.hoveredKeyIndex].isPressed) {
+				this.keys[this.hoveredKeyIndex].setPressed(false);
 			}
 
-			return;
+			this.keys[this.hoveredKeyIndex].setHovered(false);
+			this.keys[newHoveredKeyIndex].setHovered(true);
+
+			this.hoveredKeyIndex = newHoveredKeyIndex;
 		}
 
-		if(dinoInstance.y < this.keys[this.hoveredKeyIndex].pressedThreshold) { return; }
-
-		this.pressedKeyIndex = this.hoveredKeyIndex;
-		this.keys[this.pressedKeyIndex].setPressed(true);
-    }
-
-
-    getClampedRange(x) {
-		const yLowKeyDown = PianoConfig.pianoY + (PianoConfig.keyHeight / 2);
-		const yDinoMax = PianoConfig.pianoY - (PianoConfig.dinoUpperYOffset);
-
-		const lowerBound = yLowKeyDown - (x * Math.atan(Math.PI / 6.0));
-		const upperBound = yDinoMax - (x * Math.atan(Math.PI / 6.0));
-
-		return {
-			lowerBound,
-			upperBound
-		};
+		if(!this.keys[newHoveredKeyIndex].isPressed) {
+			if(this.keys[newHoveredKeyIndex].pressedThreshold <= dinoInstance.y) {
+				this.keys[newHoveredKeyIndex].setPressed(true);
+			}
+		} else if(dinoInstance.y < this.keys[this.hoveredKeyIndex].pressedThreshold) {
+			this.keys[this.hoveredKeyIndex].setPressed(false);
+		}
     }
 }
 
