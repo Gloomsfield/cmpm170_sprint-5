@@ -23,7 +23,7 @@ export class End extends Phaser.Scene {
         }).setOrigin(0.5);
 
         this.composer = new Composer(this);
-        const screech = this.sound.add("screech", {volume: 0.25});
+        const screech = this.sound.add("screech", {volume: 0.005});
 
         screech.once("complete", () => {WhiteFade.fadeOut(this, 1000, () => {this.composer.playSong(this.songData);});});
         screech.play();
